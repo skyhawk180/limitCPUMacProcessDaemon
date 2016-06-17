@@ -1,22 +1,19 @@
 #!/bin/bash
-#echo "Usage: Command "
+#echo "Usage: Command ProcessName Limit%% "
 ###
-#echo $1 $2
-# setup cputhrottle if doesn't exists
+# setup cputhrottle if doesn't exists. I prefer /usr/bin or /usr/local/bin. You can always select home directory if you choose.
 ###
-#echo "PID: $(pgrep CarboniteDaemon)"
+#echo "PID: $(pgrep $1)"
 set_service_cpu_limit(){
-    service_pid=$(pgrep CarboniteDaemon)
-#    echo "Found PID: $service_pid"
+    service_pid=$(pgrep $1)
     limit=$2
     if [[ ! -z $service_pid  ]]; then
-        service_cpu=$(ps aux | grep "sudo ./cputhrottle $service_pid 25" | grep -v grep | wc -l)
+        service_cpu=$(ps aux | grep "sudo /path/to/cputhrottle $service_pid $limit" | grep -v grep | wc -l)
         if [[ ! $service_cpu -gt 0 ]]; then
-            sudo ./cputhrottle $service_pid 25 &
+            sudo ./cputhrottle $service_pid $limit &
         fi
     fi
 }
-
 ###
 # main loop
 ###
